@@ -30,8 +30,8 @@ class BurpExtender(IBurpExtender, ITab, IContextMenuFactory):
         self.text_area = JTextArea(25, 80)
         self.text_area.setFont(Font("Monospaced", Font.PLAIN, 20))
         self.text_area.setEditable(False)
-        self.text_area.setLineWrap(True)  # Enable text wrapping
-        self.text_area.setWrapStyleWord(True)  # Ensure wrapping occurs at word boundaries
+        self.text_area.setLineWrap(True)  
+        self.text_area.setWrapStyleWord(True)  
         self.scroll_pane = JScrollPane(self.text_area)
 
         self.panel.add(top_panel, BorderLayout.NORTH)
@@ -40,7 +40,7 @@ class BurpExtender(IBurpExtender, ITab, IContextMenuFactory):
 
         callbacks.addSuiteTab(self)
 
-        # Register the context menu for Repeater
+        
         callbacks.registerContextMenuFactory(self)
 
         return
@@ -108,13 +108,11 @@ class BurpExtender(IBurpExtender, ITab, IContextMenuFactory):
         self.status_label.setText("Status: Ready to scan")
 
     def createMenuItems(self, invocation):
-        # Debug: Log the context to verify if it's in Repeater
         context = invocation.getInvocationContext()
-        print("[DEBUG] Context: {}".format(context))  # Print the context type
+        print("[DEBUG] Context: {}".format(context)) 
 
         menu_items = []
 
-        # Add a menu item only if the context is Repeater
         if context == IContextMenuInvocation.CONTEXT_REPEATER:
             print("[DEBUG] Repeater context detected!")
             item = JMenuItem("Send to Header Scanner", actionPerformed=lambda e: self.sendToHeaderScanner(invocation))
@@ -125,10 +123,8 @@ class BurpExtender(IBurpExtender, ITab, IContextMenuFactory):
         return menu_items
 
     def sendToHeaderScanner(self, invocation):
-        # Extract the URL from the Repeater request
         request = invocation.getSelectedMessages()[0].getRequest()
         url = self._helpers.analyzeRequest(request).getUrl()
 
-        # Set the URL to the target URL field
         self.url_field.setText(url.toString())
         self.text_area.append("[*] URL from Repeater: {}\n".format(url.toString()))
